@@ -1,0 +1,49 @@
+body {
+    background-color: #f8f9fa;
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+}
+
+.card {
+    transition: transform 0.2s;
+}
+
+.card:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+}
+
+.flashcard {
+    cursor: pointer;
+}
+
+.alert {
+    border-radius: 10px;
+}
+
+.btn {
+    border-radius: 20px;
+}
+
+.form-control, .form-select {
+    border-radius: 10px;
+}
+/* Styling voor afbeeldingsselectie */
+.img-thumbnail {
+    cursor: pointer;
+    transition: transform 0.2s;
+}
+
+.img-thumbnail:hover {
+    transform: scale(1.1);
+}
+
+.form-check-input:checked + .form-check-label .img-thumbnail {
+    border: 3px solid #0d6efd;
+    box-shadow: 0 0 10px rgba(13, 110, 253, 0.5);
+}
+
+/* Flashcard styling voor study mode */
+.flashcard-front img, .flashcard-back img {
+    max-height: 150px;
+    object-fit: contain;
+}

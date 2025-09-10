@@ -1,0 +1,79 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Flashcard Toevoegen</title>
+    <link th:href="@{/css/style.css}" rel="stylesheet">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+</head>
+<body>
+<div class="container mt-4">
+    <h1 class="text-center mb-4">Flashcard Toevoegen</h1>
+
+    <div th:if="${message}" class="alert alert-success alert-dismissible fade show" role="alert">
+        <span th:text="${message}"></span>
+        <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+    </div>
+
+    <form th:action="@{/add}" th:object="${flashcard}" method="post" enctype="multipart/form-data">
+        <div class="mb-3">
+            <label for="question" class="form-label">Vraag</label>
+            <input type="text" class="form-control" id="question" th:field="*{question}" required>
+            <div th:if="${#fields.hasErrors('question')}" th:errors="*{question}" class="text-danger"></div>
+        </div>
+
+        <div class="mb-3">
+            <label for="answer" class="form-label">Antwoord</label>
+            <textarea class="form-control" id="answer" th:field="*{answer}" rows="3" required></textarea>
+            <div th:if="${#fields.hasErrors('answer')}" th:errors="*{answer}" class="text-danger"></div>
+        </div>
+
+        <div class="mb-3">
+            <label for="imageFile" class="form-label">Afbeelding (optioneel)</label>
+            <input type="file" class="form-control" id="imageFile" name="imageFile" accept="image/*">
+        </div>
+        <div class="mb-3" th:if="${not availableImages.empty}">
+            <label class="form-label">Of selecteer een bestaande afbeelding:</label>
+            <div class="row">
+                <div th:each="image : ${availableImages}" class="col-2 mb-2">
+                    <div class="form-check">
+                        <input class="form-check-input" type="radio" name="selectedImage"
+                               th:value="${image}" th:id="${'img-' + imageStat.index}">
+                        <label class="form-check-label" th:for="${'img-' + imageStat.index}">
+                            <img th:src="${image}" class="img-thumbnail" style="width: 50px; height: 50px; object-fit: cover;">
+                        </label>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="mb-3">
+            <div class="form-check">
+                <input class="form-check-input" type="radio" name="selectedImage"
+                       value="" id="randomImage" checked>
+                <label class="form-check-label" for="randomImage">
+                    Willekeurige afbeelding toewijzen
+                </label>
+            </div>
+        </div>
+        <div class="mb-3">
+            <label for="category" class="form-label">Categorie (optioneel)</label>
+            <select class="form-select" id="category" th:field="*{category}">
+                <option value="">-- Selecteer categorie --</option>
+                <option th:each="cat : ${categories}"
+                        th:value="${cat.id}"
+                        th:text="${cat.name}"></option>
+            </select>
+        </div>
+
+        <div class="d-flex justify-content-between">
+            <button type="submit" class="btn btn-primary">Opslaan</button>
+            <a href="/" class="btn btn-secondary">Annuleren</a>
+        </div>
+    </form>
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+</html>
