@@ -1,96 +1,92 @@
 <!DOCTYPE html>
-<html xmlns:th="http://www.thymeleaf.org">
+<html xmlns:th="http://www.thymeleaf.org" lang="nl">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Leren met Flashcards</title>
+    <title>Leren - Flashcard Master</title>
     <link th:href="@{/css/style.css}" rel="stylesheet">
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
-    <style>
-        .flashcard {
-            perspective: 1000px;
-            width: 100%;
-            height: 300px;
-            margin: 0 auto;
-        }
-        .flashcard-inner {
-            position: relative;
-            width: 100%;
-            height: 100%;
-            transition: transform 0.6s;
-            transform-style: preserve-3d;
-        }
-        .flashcard.flipped .flashcard-inner {
-            transform: rotateY(180deg);
-        }
-        .flashcard-front, .flashcard-back {
-            position: absolute;
-            width: 100%;
-            height: 100%;
-            backface-visibility: hidden;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            flex-direction: column;
-            padding: 20px;
-            border-radius: 10px;
-            box-shadow: 0 4px 8px rgba(0,0,0,0.1);
-        }
-        .flashcard-back {
-            transform: rotateY(180deg);
-        }
-        .controls {
-            margin-top: 20px;
-            display: flex;
-            justify-content: center;
-            gap: 10px;
-        }
-    </style>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
 </head>
 <body>
-<div class="container mt-4">
-    <h1 class="text-center mb-4">Leren met Flashcards</h1>
-
-    <div th:if="${categoryName}" class="alert alert-info text-center">
-        Categorie: <strong th:text="${categoryName}"></strong>
+<div class="app-container">
+    <div class="header fade-in">
+        <h1><i class="fas fa-brain me-2"></i>Leer Modus</h1>
+        <p>Test je kennis met interactieve flashcards</p>
     </div>
 
-    <div th:if="${flashcards.empty}">
-        <div class="alert alert-warning text-center">
-            Geen flashcards beschikbaar om te leren.
-            <a href="/add" class="alert-link">Voeg flashcards toe</a>.
-        </div>
-    </div>
+    <div class="container">
+        <div class="row justify-content-center">
+            <div class="col-lg-8">
+                <div class="card fade-in">
+                    <div class="card-body">
+                        <div th:if="${categoryName}" class="alert alert-info text-center">
+                            <i class="fas fa-tag me-2"></i>
+                            Categorie: <strong th:text="${categoryName}"></strong>
+                        </div>
 
-    <div th:unless="${flashcards.empty}" class="text-center mb-4">
-        <p>Flashcard <span id="current">1</span> van <span th:text="${flashcards.size()}"></span></p>
-    </div>
+                        <div th:if="${flashcards.empty}" class="text-center py-5">
+                            <i class="fas fa-book-open fa-3x text-muted mb-3"></i>
+                            <h4 class="text-muted">Geen flashcards beschikbaar</h4>
+                            <p class="text-muted">Voeg eerst flashcards toe om te kunnen leren</p>
+                            <a href="/add" class="btn btn-primary">
+                                <i class="fas fa-plus me-2"></i>Flashcards Toevoegen
+                            </a>
+                        </div>
 
-    <div th:unless="${flashcards.empty}" class="row">
-        <div class="col-md-8 mx-auto">
-            <div class="flashcard" id="flashcard">
-                <div class="flashcard-inner">
-                    <div class="flashcard-front bg-light">
-                        <h3 th:text="${flashcards[0].question}"></h3>
-                        <th:block th:if="${flashcards[0].imageUrl}">
-                            <img th:src="${flashcards[0].imageUrl}" class="img-fluid mt-3" style="max-height: 150px;">
-                        </th:block>
-                        <p class="mt-3 text-muted">Klik om antwoord te zien</p>
-                    </div>
-                    <div class="flashcard-back bg-info text-white">
-                        <h3 th:text="${flashcards[0].answer}"></h3>
+                        <div th:unless="${flashcards.empty}" class="study-container">
+                            <div class="study-progress">
+                                    <span class="badge bg-primary">
+                                        <i class="fas fa-cards me-1"></i>
+                                        Card <span id="current">1</span> van <span th:text="${flashcards.size()}"></span>
+                                    </span>
+                            </div>
+
+                            <div class="flashcard-study" id="flashcard">
+                                <div class="flashcard-study-inner">
+                                    <div class="flashcard-study-front">
+                                        <th:block th:if="${flashcards[0].imageUrl}">
+                                            <img th:src="${flashcards[0].imageUrl}" class="study-image" alt="Vraag afbeelding">
+                                        </th:block>
+                                        <h3 class="study-question" th:text="${flashcards[0].question}"></h3>
+                                        <p class="text-muted">Klik om antwoord te zien</p>
+                                        <div class="mt-3">
+                                                <span class="badge bg-secondary">
+                                                    <i class="fas fa-hand-pointer me-1"></i>Klik om te draaien
+                                                </span>
+                                        </div>
+                                    </div>
+                                    <div class="flashcard-study-back">
+                                        <h3 class="study-answer" th:text="${flashcards[0].answer}"></h3>
+                                        <div class="mt-4">
+                                                <span class="badge bg-light text-dark">
+                                                    <i class="fas fa-lightbulb me-1"></i>Antwoord
+                                                </span>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="study-controls">
+                                <button id="prev" class="btn btn-secondary">
+                                    <i class="fas fa-arrow-left me-2"></i>Vorige
+                                </button>
+                                <button id="flip" class="btn btn-primary">
+                                    <i class="fas fa-sync me-2"></i>Draai Om
+                                </button>
+                                <button id="next" class="btn btn-secondary">
+                                    Volgende <i class="fas fa-arrow-right ms-2"></i>
+                                </button>
+                            </div>
+
+                            <div class="text-center mt-4">
+                                <a href="/" class="btn btn-outline-primary">
+                                    <i class="fas fa-home me-2"></i>Terug naar Overzicht
+                                </a>
+                            </div>
+                        </div>
                     </div>
                 </div>
-            </div>
-
-            <div class="controls mt-4">
-                <button id="prev" class="btn btn-secondary">Vorige</button>
-                <button id="flip" class="btn btn-primary">Draai om</button>
-                <button id="next" class="btn btn-secondary">Volgende</button>
-            </div>
-
-            <div class="text-center mt-4">
-                <a href="/" class="btn btn-outline-secondary">Terug naar overzicht</a>
             </div>
         </div>
     </div>
@@ -111,24 +107,40 @@
         if (flashcards.length === 0) return;
 
         const card = flashcards[currentIndex];
-        const front = flashcardElement.querySelector('.flashcard-front');
-        const back = flashcardElement.querySelector('.flashcard-back');
+        const front = flashcardElement.querySelector('.flashcard-study-front');
+        const back = flashcardElement.querySelector('.flashcard-study-back');
 
         // Update front
         front.innerHTML = `
-                <h3>${card.question}</h3>
-                ${card.imageUrl ? `<img src="${card.imageUrl}" class="img-fluid mt-3" style="max-height: 150px;">` : ''}
-                <p class="mt-3 text-muted">Klik om antwoord te zien</p>
+                ${card.imageUrl ? `<img src="${card.imageUrl}" class="study-image" alt="Vraag afbeelding">` : ''}
+                <h3 class="study-question">${card.question}</h3>
+                <p class="text-muted">Klik om antwoord te zien</p>
+                <div class="mt-3">
+                    <span class="badge bg-secondary">
+                        <i class="fas fa-hand-pointer me-1"></i>Klik om te draaien
+                    </span>
+                </div>
             `;
 
         // Update back
-        back.innerHTML = `<h3>${card.answer}</h3>`;
+        back.innerHTML = `
+                <h3 class="study-answer">${card.answer}</h3>
+                <div class="mt-4">
+                    <span class="badge bg-light text-dark">
+                        <i class="fas fa-lightbulb me-1"></i>Antwoord
+                    </span>
+                </div>
+            `;
 
         // Reset flip state
         flashcardElement.classList.remove('flipped');
 
         // Update counter
         currentElement.textContent = currentIndex + 1;
+
+        // Update button states
+        prevButton.disabled = currentIndex === 0;
+        nextButton.disabled = currentIndex === flashcards.length - 1;
     }
 
     flashcardElement.addEventListener('click', () => {
@@ -151,6 +163,13 @@
             currentIndex++;
             updateFlashcard();
         }
+    });
+
+    // Keyboard navigation
+    document.addEventListener('keydown', (e) => {
+        if (e.key === 'ArrowLeft') prevButton.click();
+        if (e.key === 'ArrowRight') nextButton.click();
+        if (e.key === ' ') flipButton.click();
     });
 
     // Initialize

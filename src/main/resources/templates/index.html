@@ -1,58 +1,115 @@
 <!DOCTYPE html>
-<html xmlns:th="http://www.thymeleaf.org">
+<html xmlns:th="http://www.thymeleaf.org" lang="nl">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Flashcard App</title>
+    <title>Brain rot meme flashcards</title>
     <link th:href="@{/css/style.css}" rel="stylesheet">
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
 </head>
 <body>
-<div class="container mt-4">
-    <h1 class="text-center mb-4">Mijn Flashcards</h1>
-
-    <div th:if="${message}" class="alert alert-success alert-dismissible fade show" role="alert">
-        <span th:text="${message}"></span>
-        <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+<div class="app-container">
+    <div class="header fade-in">
+        <h1><i class="fas fa-graduation-cap me-2"></i>Flashcard Master</h1>
+        <p>De manier om te leren</p>
     </div>
 
-    <div class="d-flex justify-content-between mb-3">
-        <a href="/add" class="btn btn-primary">Nieuwe Flashcard</a>
-        <a href="/study" class="btn btn-success">Leren</a>
-        <a href="/categories" class="btn btn-info">Categorieën</a>
-    </div>
-    <!-- Toevoegen na de knoppenbalk -->
-    <div class="mb-3">
-        <a href="/randomize-images" class="btn btn-warning">Willekeurige afbeeldingen toewijzen</a>
-    </div>
+    <div class="container">
+        <div class="row justify-content-center">
+            <div class="col-lg-10">
+                <div class="card fade-in">
+                    <div class="card-body">
+                        <div th:if="${message}" class="alert alert-success alert-dismissible fade show" role="alert">
+                            <i class="fas fa-check-circle me-2"></i>
+                            <span th:text="${message}"></span>
+                            <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+                        </div>
 
-    <div th:if="${flashcards.empty}">
-        <div class="alert alert-info">
-            Nog geen flashcards. <a href="/add">Voeg er een toe</a>.
-        </div>
-    </div>
+                        <div class="d-flex justify-content-between align-items-center mb-4">
+                            <h2 class="mb-0"><i class="fas fa-book me-2"></i>Mijn Flashcards</h2>
+                            <span class="badge bg-primary">
+                                    <i class="fas fa-cards me-1"></i>
+                                    <span th:text="${flashcards.size()}"></span> cards
+                                </span>
+                        </div>
 
-    <div class="row">
-        <div th:each="flashcard : ${flashcards}" class="col-md-4 mb-3">
-            <div class="card h-100">
-                <th:block th:if="${flashcard.imageUrl}">
-                    <img th:src="${flashcard.imageUrl}" class="card-img-top" alt="Flashcard afbeelding">
-                </th:block>
-                <div class="card-body">
-                    <h5 class="card-title" th:text="${flashcard.question}"></h5>
-                    <p class="card-text" th:text="${flashcard.answer}"></p>
-                    <th:block th:if="${flashcard.category}">
-                        <span class="badge bg-secondary" th:text="${flashcard.category.name}"></span>
-                    </th:block>
-                </div>
-                <div class="card-footer">
-                    <a th:href="@{/delete/{id}(id=${flashcard.id})}" class="btn btn-danger btn-sm">Verwijderen</a>
+                        <div class="row mb-4">
+                            <div class="col-md-4 mb-2">
+                                <a href="/add" class="btn btn-primary w-100">
+                                    <i class="fas fa-plus me-2"></i>Nieuwe Card
+                                </a>
+                            </div>
+                            <div class="col-md-4 mb-2">
+                                <a href="/study" class="btn btn-success w-100">
+                                    <i class="fas fa-brain me-2"></i>Start Leren
+                                </a>
+                            </div>
+                            <div class="col-md-4 mb-2">
+                                <a href="/categories" class="btn btn-info w-100">
+                                    <i class="fas fa-tags me-2"></i>Categorieën
+                                </a>
+                            </div>
+                        </div>
+
+                        <div class="mb-3">
+                            <a href="/randomize-images" class="btn btn-warning">
+                                <i class="fas fa-shuffle me-2"></i>Willekeurige Afbeeldingen
+                            </a>
+                        </div>
+
+                        <div th:if="${flashcards.empty}" class="text-center py-5">
+                            <i class="fas fa-inbox fa-3x text-muted mb-3"></i>
+                            <h4 class="text-muted">Nog geen flashcards</h4>
+                            <p class="text-muted">Begin met leren door je eerste flashcard toe te voegen!</p>
+                            <a href="/add" class="btn btn-primary btn-lg pulse">
+                                <i class="fas fa-plus me-2"></i>Eerste Card Toevoegen
+                            </a>
+                        </div>
+
+                        <div th:unless="${flashcards.empty}" class="flashcard-grid">
+                            <div th:each="flashcard : ${flashcards}" class="card flashcard-item">
+                                <th:block th:if="${flashcard.imageUrl}">
+                                    <img th:src="${flashcard.imageUrl}" class="flashcard-image" alt="Flashcard afbeelding">
+                                </th:block>
+                                <div class="flashcard-content">
+                                    <h5 class="flashcard-question" th:text="${flashcard.question}"></h5>
+                                    <p class="flashcard-answer" th:text="${flashcard.answer}"></p>
+                                    <th:block th:if="${flashcard.category}">
+                                        <span class="flashcard-category" th:text="${flashcard.category.name}"></span>
+                                    </th:block>
+                                    <div class="mt-3">
+                                        <a th:href="@{/delete/{id}(id=${flashcard.id})}"
+                                           class="btn btn-danger btn-sm"
+                                           onclick="return confirm('Weet je zeker dat je deze flashcard wilt verwijderen?')">
+                                            <i class="fas fa-trash me-1"></i>Verwijderen
+                                        </a>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
                 </div>
             </div>
         </div>
     </div>
+
+    <div class="footer">
+        <p>&copy; 2024 Flashcard Master | Gemaakt met <i class="fas fa-heart text-danger"></i> voor betere leerresultaten</p>
+    </div>
 </div>
 
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+<script>
+    // Add smooth scrolling
+    document.addEventListener('DOMContentLoaded', function() {
+        const alerts = document.querySelectorAll('.alert');
+        alerts.forEach(alert => {
+            setTimeout(() => {
+                alert.classList.remove('show');
+            }, 5000);
+        });
+    });
+</script>
 </body>
 </html>
